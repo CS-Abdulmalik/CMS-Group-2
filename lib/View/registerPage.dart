@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import '/Widgets/text_input.dart';
-import '/View/registerPage.dart';
-import '/View/forgetPasswordPage.dart';
 
-class loginPage extends StatelessWidget {
-  loginPage({super.key});
+class registerPage extends StatefulWidget {
+  const registerPage({super.key});
+
+  @override
+  State<registerPage> createState() => _registerPageState();
+}
+
+class _registerPageState extends State<registerPage> {
 
   // text editing controller
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +34,7 @@ class loginPage extends StatelessWidget {
 
           // welcome message
           Text(
-            "Welcome back",
+            "Registor",
             style: TextStyle(
                 fontSize: 24,
                 color: Colors.black45,
@@ -60,56 +66,40 @@ class loginPage extends StatelessWidget {
           ),
 
           SizedBox(
-            height: 5,
+            height: 10,
           ),
-
-          // Forget Password
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => forgetPasswordPage()));
-                  },
-                  child: Text(
-                    'Forget Password?',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black45,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
+          // Confirm Password Input
+          textInput(
+            controller: confirmPasswordController,
+            labelText: 'Confirm Password',
+            hintText: 'Enter your password',
+            obscureText: true,
           ),
 
           SizedBox(
             height: 20,
           ),
 
-          // Sign In Button
+          // Sign up Button for registor
           ElevatedButton(
               onPressed: () {},
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
-                  minimumSize: MaterialStateProperty.all(Size(360, 50))),
+                  minimumSize: MaterialStateProperty.all(Size(365, 50))),
               child: Text(
-                'Sign In',
+                'Sign Up',
                 style: TextStyle(fontSize: 24, color: Colors.white70),
               )),
           SizedBox(
             height: 5,
           ),
 
-          // Register
+          // Back to the login page
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Not a member?',
+                'Are you member?',
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.black45,
@@ -117,11 +107,10 @@ class loginPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => registerPage()));
+                  Navigator.of(context).pop();
                 },
                 child: Text(
-                  'Register now',
+                  'Sign in',
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.blueAccent,
