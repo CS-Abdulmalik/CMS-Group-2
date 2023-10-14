@@ -1,20 +1,73 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '/Widgets/text_input.dart';
+import '/Controller/RegisterPageController.dart';
+import '../Widgets/text_input.dart';
+import 'homePage.dart';
 
-class registerPage extends StatefulWidget {
-  const registerPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<registerPage> createState() => _registerPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _registerPageState extends State<registerPage> {
-
-  // text editing controller
+class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+  final RegisterController controller = RegisterController();
+
+// singUp method
+  void signUp() async {
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    // check if the passwords are the same
+    try {
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        // Stop loading and navigate to Home Page
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => homePage()));
+      } else {
+        // Error Passwords are different
+        Navigator.pop(context);
+        showErrorMessage("Passwords are different");
+      }
+    } on FirebaseAuthException catch (e) {
+
+        // Show Error like already in use
+      Navigator.pop(context);
+      showErrorMessage("An error occurred: ${e.code}");
+    }
+  }
+// Show Error Messages method
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +76,6 @@ class _registerPageState extends State<registerPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // logo
           Icon(
             Icons.account_circle_rounded,
             size: 100,
@@ -31,61 +83,48 @@ class _registerPageState extends State<registerPage> {
           SizedBox(
             height: 20,
           ),
-
-          // welcome message
           Text(
-            "Registor",
+            "Register",
             style: TextStyle(
                 fontSize: 24,
                 color: Colors.black45,
                 fontWeight: FontWeight.bold),
           ),
-
           SizedBox(
             height: 20,
           ),
-
-          // Email Input
           textInput(
             controller: emailController,
             labelText: 'Email',
             hintText: 'example@email.com',
             obscureText: false,
           ),
-
           SizedBox(
             height: 15,
           ),
-
-          // Password Input
           textInput(
             controller: passwordController,
             labelText: 'Password',
             hintText: 'Enter your password',
             obscureText: true,
           ),
-
           SizedBox(
             height: 10,
           ),
-          // Confirm Password Input
           textInput(
             controller: confirmPasswordController,
             labelText: 'Confirm Password',
             hintText: 'Enter your password',
             obscureText: true,
           ),
-
           SizedBox(
             height: 20,
           ),
-
-          // Sign up Button for registor
           ElevatedButton(
-              onPressed: () {},
+              onPressed: signUp,
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
-                  minimumSize: MaterialStateProperty.all(Size(365, 50))),
+                  minimumSize: MaterialStateProperty.all(Size(341, 50))),
               child: Text(
                 'Sign Up',
                 style: TextStyle(fontSize: 24, color: Colors.white70),
@@ -93,13 +132,11 @@ class _registerPageState extends State<registerPage> {
           SizedBox(
             height: 5,
           ),
-
-          // Back to the login page
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Are you member?',
+                'Are you a member?',
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.black45,

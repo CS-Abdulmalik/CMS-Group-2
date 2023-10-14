@@ -1,23 +1,74 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '/Widgets/text_input.dart';
-import '/View/registerPage.dart';
-import '/View/forgetPasswordPage.dart';
+import '../Controller/LoginPageController.dart';
+import '../Widgets/text_input.dart';
+import '../Model/loginModel.dart'; // Import the UserModel class
+import '../Controller/LoginPageController.dart';
+import 'registerPage.dart';
+import 'forgetPasswordPage.dart';
+import '../Widgets/text_input.dart';
 
-class loginPage extends StatelessWidget {
-  loginPage({super.key});
+class LoginPage extends StatefulWidget {
+  LoginPage({Key? key}) : super(key: key);
 
-  // text editing controller
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final LoginPageController controller = LoginPageController();
+
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> signIn() async {
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    try {
+      await controller.signIn(emailController.text, passwordController.text);
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+        showErrorMessage("User not found or Wrong password");
+      } else {
+        showErrorMessage("An error occurred: ${e.code}");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white60,
+      backgroundColor: Colors.black38,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // logo
           Icon(
             Icons.account_circle_rounded,
             size: 100,
@@ -25,8 +76,6 @@ class loginPage extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-
-          // welcome message
           Text(
             "Welcome back",
             style: TextStyle(
@@ -34,36 +83,27 @@ class loginPage extends StatelessWidget {
                 color: Colors.black45,
                 fontWeight: FontWeight.bold),
           ),
-
           SizedBox(
             height: 20,
           ),
-
-          // Email Input
           textInput(
             controller: emailController,
             labelText: 'Email',
             hintText: 'example@email.com',
             obscureText: false,
           ),
-
           SizedBox(
             height: 15,
           ),
-
-          // Password Input
           textInput(
             controller: passwordController,
             labelText: 'Password',
             hintText: 'Enter your password',
             obscureText: true,
           ),
-
           SizedBox(
             height: 5,
           ),
-
-          // Forget Password
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Row(
@@ -72,7 +112,7 @@ class loginPage extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => forgetPasswordPage()));
+                        builder: (context) => ForgetPasswordPage()));
                   },
                   child: Text(
                     'Forget Password?',
@@ -85,17 +125,14 @@ class loginPage extends StatelessWidget {
               ],
             ),
           ),
-
           SizedBox(
-            height: 20,
+            height: 5,
           ),
-
-          // Sign In Button
           ElevatedButton(
-              onPressed: () {},
+              onPressed: signIn,
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
-                  minimumSize: MaterialStateProperty.all(Size(360, 50))),
+                  minimumSize: MaterialStateProperty.all(Size(341, 50))),
               child: Text(
                 'Sign In',
                 style: TextStyle(fontSize: 24, color: Colors.white70),
@@ -103,8 +140,6 @@ class loginPage extends StatelessWidget {
           SizedBox(
             height: 5,
           ),
-
-          // Register
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -118,7 +153,7 @@ class loginPage extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => registerPage()));
+                      MaterialPageRoute(builder: (context) => RegisterPage()));
                 },
                 child: Text(
                   'Register now',
