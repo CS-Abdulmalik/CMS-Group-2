@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "700254623064",
+    "project_id": "cms-group-2-764af",
+    "storage_bucket": "cms-group-2-764af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700254623064:android:5b61ded93f19823b3e812d",
+        "android_client_info": {
+          "package_name": "com.example.cms_group2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz4dBDOggIMNu0gidpIz60oAOB0LvBJw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
