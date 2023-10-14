@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '/Widgets/text_input.dart';
 
-class forgetPasswordPage extends StatefulWidget {
-  const forgetPasswordPage({super.key});
+class ForgetPasswordPage extends StatefulWidget {
+  const ForgetPasswordPage({super.key});
 
   @override
-  State<forgetPasswordPage> createState() => _forgetPasswordPageState();
+  State<ForgetPasswordPage> createState() => _forgetPasswordPageState();
 }
 
-class _forgetPasswordPageState extends State<forgetPasswordPage> {
+class _forgetPasswordPageState extends State<ForgetPasswordPage> {
   // text editing controller
   final emailController = TextEditingController();
 
@@ -57,7 +57,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage> {
               onPressed: () {},
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
-                  minimumSize: MaterialStateProperty.all(Size(360, 50))),
+                  minimumSize: MaterialStateProperty.all(Size(341, 50))),
               child: Text(
                 'Send',
                 style: TextStyle(fontSize: 24, color: Colors.white70),

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import '/Widgets/text_input.dart';
 
-class registerPage extends StatefulWidget {
-  const registerPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<registerPage> createState() => _registerPageState();
+  State<RegisterPage> createState() => _registerPageState();
 }
 
-class _registerPageState extends State<registerPage> {
-
+class _registerPageState extends State<RegisterPage> {
   // text editing controller
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
