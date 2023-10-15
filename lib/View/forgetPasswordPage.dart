@@ -1,16 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '/Widgets/text_input.dart';
+
+import '../Controller/ForgetPasswordPageController.dart';
+import '../Widgets/text_input.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
-  const ForgetPasswordPage({super.key});
+  const ForgetPasswordPage({Key? key,}) : super(key: key);
 
   @override
-  State<ForgetPasswordPage> createState() => _forgetPasswordPageState();
+  State<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
 }
 
-class _forgetPasswordPageState extends State<ForgetPasswordPage> {
-  // text editing controller
-  final emailController = TextEditingController();
+class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+  final ForgetPasswordController = TextEditingController();
+
+  Future passwordReset() async {
+    // Get the user's email address from the view.
+    String email = ForgetPasswordController.text;
+
+    // Send a password reset email to the user.
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+    // Show a success message to the user.
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text('Password reset link sent! check your Email if you don\'t receive the link, please \"sign up\"'),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +63,7 @@ class _forgetPasswordPageState extends State<ForgetPasswordPage> {
 
           // Email Input
           textInput(
-            controller: emailController,
+            controller: ForgetPasswordController,
             labelText: 'Email',
             hintText: 'example@email.com',
             obscureText: false,
@@ -54,7 +74,7 @@ class _forgetPasswordPageState extends State<ForgetPasswordPage> {
           ),
           // Send Button for forget password
           ElevatedButton(
-              onPressed: () {},
+              onPressed: passwordReset,
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black),
                   minimumSize: MaterialStateProperty.all(Size(341, 50))),

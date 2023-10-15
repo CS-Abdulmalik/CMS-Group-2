@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Controller/LoginPageController.dart';
 import '../Widgets/text_input.dart';
-import '../Model/loginModel.dart'; // Import the UserModel class
+import '../Model/loginModel.dart';
 import '../Controller/LoginPageController.dart';
 import 'registerPage.dart';
 import 'forgetPasswordPage.dart';
@@ -113,6 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ForgetPasswordPage()));
+
                   },
                   child: Text(
                     'Forget Password?',
