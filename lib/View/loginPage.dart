@@ -7,6 +7,7 @@ import '../Controller/LoginPageController.dart';
 import 'registerPage.dart';
 import 'forgetPasswordPage.dart';
 import '../Widgets/text_input.dart';
+import '/View/homePage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -51,6 +52,8 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await controller.signIn(emailController.text, passwordController.text);
       Navigator.pop(context);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => homePage()));
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
 
@@ -65,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black38,
+      backgroundColor: Colors.white60,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -113,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ForgetPasswordPage()));
-
                   },
                   child: Text(
                     'Forget Password?',

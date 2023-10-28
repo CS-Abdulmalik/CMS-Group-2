@@ -10,6 +10,7 @@ class LoginModel {
         password: password,
       );
       return userCredential.user;
+
     } on FirebaseAuthException catch (e) {
       throw e;
     }

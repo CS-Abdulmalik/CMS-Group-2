@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '/Controller/RegisterPageController.dart';
 import '../Widgets/text_input.dart';
-import 'homePage.dart';
+import '/View/homePage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

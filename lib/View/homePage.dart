@@ -1,10 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import '../View/NavBar.dart';
+import 'package:sidebarx/sidebarx.dart';
 
-class homePage extends StatelessWidget {
+
+class homePage extends StatefulWidget {
   const homePage({super.key});
 
+  @override
+  State<homePage> createState() => _homePageState();
+}
+
+class _homePageState extends State<homePage> {
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
@@ -12,17 +20,10 @@ class homePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
-        backgroundColor: Colors.black38,
-        actions: [
-          IconButton(
-            onPressed: signOut,
-            icon: Icon(Icons.logout_rounded),
-          )
-        ],
-      ),
-      body: Center(
-        child: Text("Signed In"),
+        backgroundColor: Colors.black87,
+        title: Center(child: Text("Home Page"),),
       ),
     );
   }

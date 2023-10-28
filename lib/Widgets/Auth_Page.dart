@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../View/forgetPasswordPage.dart';
 import '../View/homePage.dart';
 import '../View/registerPage.dart';
-import 'Login_Or_Register_Page.dart';
+import '/Widgets/Login_Or_Register_Page.dart';
+
 
 class authPage extends StatelessWidget {
   const authPage({super.key});
