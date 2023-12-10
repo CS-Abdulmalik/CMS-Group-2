@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '/Controller/RegisterPageController.dart';
@@ -29,10 +30,17 @@ class _RegisterPageState extends State<RegisterPage> {
     // check if the passwords are the same
     try {
       if (passwordController.text == confirmPasswordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
+
+        // add it to Firestore as Student
+
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'email': emailController.text,
+          'role': 'admin', // Set the initial role (you can change this based on your logic)
+        });
         // Stop loading and navigate to Home Page
         Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context) => homePage()));

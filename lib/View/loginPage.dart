@@ -1,3 +1,4 @@
+import 'package:cms_group2/Widgets/Check_User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Controller/LoginPageController.dart';
@@ -8,6 +9,8 @@ import 'registerPage.dart';
 import 'forgetPasswordPage.dart';
 import '../Widgets/text_input.dart';
 import '/View/homePage.dart';
+import '/Widgets/Check_User.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -42,6 +45,29 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // Future<void> signIn() async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => Center(
+  //       child: CircularProgressIndicator(),
+  //     ),
+  //   );
+  //   try {
+  //     await controller.signIn(emailController.text, passwordController.text);
+  //     Navigator.pop(context);
+  //     Navigator.of(context)
+  //         .push(MaterialPageRoute(builder: (context) => homePage()));
+  //   } on FirebaseAuthException catch (e) {
+  //     Navigator.pop(context);
+  //
+  //     if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+  //       showErrorMessage("User not found or Wrong password");
+  //     } else {
+  //       showErrorMessage("An error occurred: ${e.code}");
+  //     }
+  //   }
+  // }
+
   Future<void> signIn() async {
     showDialog(
       context: context,
@@ -50,17 +76,70 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     try {
-      await controller.signIn(emailController.text, passwordController.text);
-      Navigator.pop(context);
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => homePage()));
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
 
-      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-        showErrorMessage("User not found or Wrong password");
-      } else {
-        showErrorMessage("An error occurred: ${e.code}");
+      User? user = FirebaseAuth.instance.currentUser;
+
+      var firebaseData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      // .then((DocumentSnapshot documentSnapshot) {
+
+      if (firebaseData.exists) {
+        String role =
+            firebaseData.get('role');
+
+        Navigator.pop(context);
+
+        if (role == "admin") {
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => AdminPage(),
+          //   ),
+          // );
+          showErrorMessage("Welcome, Admin!");
+
+        } else if (role == "student") {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => homePage()));
+          showErrorMessage("Welcome, Student!");
+
+        } else if (role == "teacher") {
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => TeacherPage(),
+          //   ),
+          // );
+          showErrorMessage("Welcome, Teacher!");
+        } else {
+          showErrorMessage("Unknown user role");
+        }
+
+        // Check if user data inside Firestore
+
+        // } else {
+        //   Navigator.pop(context); // Close loading dialog
+        //   showErrorMessage("User not in Firestore");
+        // }
+
+        // Massage Error for the User
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      if (e is FirebaseAuthException) {
+        if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+          showErrorMessage("User not found or Wrong password");
+        } else {
+          showErrorMessage("An error occurred: ${e.code}");
+        }
       }
     }
   }
