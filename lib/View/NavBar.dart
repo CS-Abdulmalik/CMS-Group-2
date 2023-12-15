@@ -1,16 +1,19 @@
 import 'package:cms_group2/View/ProfilePage.dart';
+import 'package:cms_group2/View/AdminPage.dart';
 import 'package:cms_group2/View/forgetPasswordPage.dart';
 import 'package:cms_group2/View/homePage.dart';
 import 'package:cms_group2/View/loginPage.dart';
 import 'package:cms_group2/View/registerPage.dart';
+import 'package:cms_group2/Widgets/Check_User.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '/Model/PageCheck.dart';
 import '/View/CoursesPage.dart';
+import 'MyCoursesPage.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+  NavBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +74,27 @@ class NavBar extends StatelessWidget {
               child: Text("Courses",
                   style: TextStyle(fontSize: 16, color: Colors.black))),
 
+          // This Teachers courses only can see the buttom if the user is Teacher
+
+          Visibility(
+            visible: LoginPageState.userRole != null &&
+                (LoginPageState.userRole!.contains('teacher')),
+            child: TextButton(
+              onPressed: () {
+                if (!isUserOnPage(context, '/MyCoursesPage')) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => MyCoursesPage()));
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(
+                "My Courses",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+            ),
+          ),
+
           // Profile Page
 
           TextButton(
@@ -84,6 +108,24 @@ class NavBar extends StatelessWidget {
               },
               child: Text("Profile ",
                   style: TextStyle(fontSize: 16, color: Colors.black))),
+
+          // Admin Dashbord visible only for Admins
+
+          Visibility(
+            visible: LoginPageState.userRole != null &&
+                LoginPageState.userRole!.contains('admin'),
+            child: TextButton(
+                onPressed: () {
+                  if (!isUserOnPage(context, '/AdminPage')) {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => AdminPage()));
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text("Admin Dashboard",
+                    style: TextStyle(fontSize: 16, color: Colors.black))),
+          ),
 
           // Logout
 

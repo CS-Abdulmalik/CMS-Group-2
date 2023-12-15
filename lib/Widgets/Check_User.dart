@@ -16,7 +16,7 @@ Future<List<String>> getUserRoles(String email, String password) async {
       }
     }
   }
-  return []; // Return an empty list if the user document doesn't exist or 'roles' is not a List<String>
+  return [];
 }
 
 // Function to get the user ID by email and password from Firebase Authentication

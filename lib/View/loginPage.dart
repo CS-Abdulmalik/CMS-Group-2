@@ -1,30 +1,29 @@
-import 'package:cms_group2/Widgets/Check_User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Controller/LoginPageController.dart';
 import '../Widgets/text_input.dart';
-import '../Model/loginModel.dart';
-import '../Controller/LoginPageController.dart';
+import 'CoursesPage.dart';
 import 'registerPage.dart';
 import 'forgetPasswordPage.dart';
-import '../Widgets/text_input.dart';
 import '/View/homePage.dart';
-import '/Widgets/Check_User.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '/View/CoursesPage.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key,}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final LoginPageController controller = LoginPageController();
 
+  // static String? userEmail;
+  // static String? userPassword;
+  static String? userRole;
   void showErrorMessage(String message) {
     showDialog(
       context: context,
@@ -45,30 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Future<void> signIn() async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => Center(
-  //       child: CircularProgressIndicator(),
-  //     ),
-  //   );
-  //   try {
-  //     await controller.signIn(emailController.text, passwordController.text);
-  //     Navigator.pop(context);
-  //     Navigator.of(context)
-  //         .push(MaterialPageRoute(builder: (context) => homePage()));
-  //   } on FirebaseAuthException catch (e) {
-  //     Navigator.pop(context);
-  //
-  //     if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-  //       showErrorMessage("User not found or Wrong password");
-  //     } else {
-  //       showErrorMessage("An error occurred: ${e.code}");
-  //     }
-  //   }
-  // }
-
-  Future<void> signIn() async {
+  Future<String?> signIn() async {
     showDialog(
       context: context,
       builder: (context) => Center(
@@ -81,6 +57,10 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
+      // setState(() {
+      //   userEmail = emailController.text;
+      //   userPassword = passwordController.text;
+      // });
 
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -92,46 +72,34 @@ class _LoginPageState extends State<LoginPage> {
       // .then((DocumentSnapshot documentSnapshot) {
 
       if (firebaseData.exists) {
-        String role =
-            firebaseData.get('role');
+         String role = firebaseData.get('role');
+
+         setState(() {
+           userRole = role; // Set the userRole variable
+         });
 
         Navigator.pop(context);
 
-        if (role == "admin") {
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => AdminPage(),
-          //   ),
-          // );
-          showErrorMessage("Welcome, Admin!");
+        // For testing if the What User login
 
+        if (role == "admin") {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => homePage()));
+          showErrorMessage("Welcome, Admin!");
         } else if (role == "student") {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => homePage()));
           showErrorMessage("Welcome, Student!");
-
         } else if (role == "teacher") {
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => TeacherPage(),
-          //   ),
-          // );
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => homePage()));
           showErrorMessage("Welcome, Teacher!");
         } else {
           showErrorMessage("Unknown user role");
         }
-
-        // Check if user data inside Firestore
-
-        // } else {
-        //   Navigator.pop(context); // Close loading dialog
-        //   showErrorMessage("User not in Firestore");
-        // }
-
-        // Massage Error for the User
       }
+
+      // Massage Error for the User
     } catch (e) {
       Navigator.pop(context);
       if (e is FirebaseAuthException) {
@@ -142,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     }
+    return null;
   }
 
   @override

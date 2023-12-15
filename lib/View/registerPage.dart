@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
         await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
           'email': emailController.text,
-          'role': 'admin', // Set the initial role (you can change this based on your logic)
+          'role': 'student',
         });
         // Stop loading and navigate to Home Page
         Navigator.pop(context);

@@ -19,14 +19,14 @@ class Course {
       required this.image});
 }
 
-class CoursesPage extends StatefulWidget {
+class MyCoursesPage extends StatefulWidget {
 // final String roles;
 //   CoursesPage({required this.roles});
-  CoursesPage({
+  MyCoursesPage({
     Key? key,
   }) : super(key: key);
   @override
-  CoursesPageState createState() => CoursesPageState();
+  MyCoursesPageState createState() => MyCoursesPageState();
 }
 
 // class CoursesPage extends StatefulWidget {
@@ -38,7 +38,7 @@ class CoursesPage extends StatefulWidget {
 //   CoursesPageState createState() => CoursesPageState();
 // }
 
-class CoursesPageState extends State<CoursesPage> {
+class MyCoursesPageState extends State<MyCoursesPage> {
   final CollectionReference coursesCollection =
       FirebaseFirestore.instance.collection('courses');
 
@@ -62,54 +62,49 @@ class CoursesPageState extends State<CoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(),
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        title: Center(child: Text('Courses')),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: coursesCollection.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
+        drawer: NavBar(),
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          title: Center(child: Text('My Courses')),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: coursesCollection.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No courses available.'));
-          }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text('No courses available.'));
+            }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var courseDocument = snapshot.data!.docs[index];
-              var courseId = courseDocument.id; // Get the document ID
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var courseDocument = snapshot.data!.docs[index];
+                var courseId = courseDocument.id; // Get the document ID
 
-              return buildCourseCard(
-                Course(
-                  id: courseId, // Include the document ID in the Course instance
-                  title: courseDocument['title'],
-                  description: courseDocument['description'],
-                  image: courseDocument['image'],
-                ),
-              );
-            },
-          );
-        },
-      ),
-
-      // The add ActionButton is to add course Only for teacher and admin
-
-      floatingActionButton: LoginPageState.userRole != null &&
-              (LoginPageState.userRole!.contains('teacher') ||
-                  LoginPageState.userRole!.contains('admin'))
-          ? FloatingActionButton(
-              onPressed: () {
-                _promptUserForCourse();
+                return buildCourseCard(
+                  Course(
+                    id: courseId, // Include the document ID in the Course instance
+                    title: courseDocument['title'],
+                    description: courseDocument['description'],
+                    image: courseDocument['image'],
+                  ),
+                );
               },
-              child: Icon(Icons.add),
-            )
-          : SizedBox(),
-    );
+            );
+          },
+        ),
+
+        // The add ActionButton is to add course Only for teacher and admin
+
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _promptUserForCourse();
+          },
+          child: Icon(Icons.add),
+        ));
   }
 
   Widget buildCourseCard(Course course) {
@@ -239,7 +234,7 @@ class CoursesPageState extends State<CoursesPage> {
                           ),
                         ),
                         child: Text(
-                          'Enroll',
+                            'Edit',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
